@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-
-# Run the update badges script
-node .husky/update-badges.js
