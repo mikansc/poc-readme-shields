@@ -107,6 +107,9 @@ function updateBadges() {
     execSync('git commit -m "chore carlim: update badges"', { stdio: 'ignore' });
     log.success('README.md adicionado ao commit');
 
+    execSync('git push', { stdio: 'ignore' });
+    log.success('Pushed to remote');
+
   } catch (error) {
     console.error(`Erro: ${error.message}`);
   }
