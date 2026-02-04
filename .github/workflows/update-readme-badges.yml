@@ -8,6 +8,10 @@ on:
       - 'package.json'
   workflow_dispatch:
 
+# IMPORTANTE: Adicionar permissões para o GITHUB_TOKEN
+permissions:
+  contents: write
+
 jobs:
   update-readme:
     runs-on: ubuntu-latest
@@ -114,8 +118,8 @@ jobs:
       
       - name: Commit and push changes
         run: |
-          git config --local user.email "michael.nsc@outlook.com"
-          git config --local user.name "Michael Nascimento"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           
           if git diff --quiet README.md; then
             echo "✓ Nenhuma alteração detectada no README.md"
