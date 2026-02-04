@@ -1,6 +1,6 @@
 {
   "name": "poc-readme-shields",
-  "version": "2.0.00",
+  "version": "2.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -20,5 +20,5 @@
   "homepage": "https://github.com/mikansc/poc-readme-shields#readme",
   "dependencies": {
     "axios": "^1.13.4"
-  }
+  }  
 }
