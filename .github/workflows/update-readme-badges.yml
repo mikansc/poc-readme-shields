@@ -114,8 +114,8 @@ jobs:
       
       - name: Commit and push changes
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          git config --local user.email "michael.nsc@outlook.com"
+          git config --local user.name "Michael Nascimento"
           
           if git diff --quiet README.md; then
             echo "✓ Nenhuma alteração detectada no README.md"
