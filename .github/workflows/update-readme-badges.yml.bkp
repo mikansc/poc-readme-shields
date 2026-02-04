@@ -8,7 +8,7 @@ on:
       - 'package.json'
   workflow_dispatch:
 
-# IMPORTANTE: Adicionar permissões para o GITHUB_TOKEN
+# Required for committing and pushing from the workflow (public or private repos)
 permissions:
   contents: write
 
@@ -20,7 +20,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Use PAT for private repos or when org restricts GITHUB_TOKEN; otherwise GITHUB_TOKEN is enough
+          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -118,8 +119,9 @@ jobs:
       
       - name: Commit and push changes
         run: |
-          git config --local user.email "michael.nsc@outlook.com"
-          git config --local user.name "michaelbot"
+          # Use the author of the push (or the user who dispatched the workflow) for the commit
+          git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --local user.name "${{ github.actor }}"
           
           if git diff --quiet README.md; then
             echo "✓ Nenhuma alteração detectada no README.md"

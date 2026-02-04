@@ -176,12 +176,17 @@ EOFNODE
     echo ""
     echo "📝 Criando git hook nativo..."
     
+    # Garantir que estamos na raiz do repo para .git/hooks
+    ROOT_DIR="$(git rev-parse --show-toplevel)"
+    HOOKS_DIR="$ROOT_DIR/.git/hooks"
+    mkdir -p "$HOOKS_DIR"
+
     # Criar script
-    cat > .git/hooks/pre-commit << 'EOFBASH'
+    cat > "$HOOKS_DIR/pre-commit" << 'EOFBASH'
 #!/usr/bin/env node
 
-const fs = require('fs');
-const { execSync } = require('child_process');
+const fs = require('node:fs');
+const { execSync } = require('node:child_process');
 
 const colors = {
   reset: '\x1b[0m',
@@ -198,6 +203,7 @@ const log = {
 
 function isPackageJsonModified() {
   try {
+    // Check for package.json in STAGED changes (--cached)
     const stagedFiles = execSync('git diff --cached --name-only', { encoding: 'utf8' });
     return stagedFiles.includes('package.json');
   } catch (error) {
@@ -258,18 +264,20 @@ function updateBadges() {
     fs.writeFileSync('README.md', readme, 'utf8');
     log.success('Badges atualizadas no README.md');
 
+    // Add the updated README to the commit
     execSync('git add README.md', { stdio: 'ignore' });
     log.success('README.md adicionado ao commit');
 
   } catch (error) {
     console.error(`Erro: ${error.message}`);
+    process.exit(1); // Exit with error to abort commit if something goes wrong
   }
 }
 
 updateBadges();
 EOFBASH
     
-    chmod +x .git/hooks/pre-commit
+    chmod +x "$HOOKS_DIR/pre-commit"
     
     echo ""
     echo "✅ Git hook configurado com sucesso!"
