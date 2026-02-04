@@ -33,7 +33,7 @@ function updateBadges() {
 
   if (!fs.existsSync('README.md')) {
     log.warning('README.md não encontrado!');
-    return;
+    process.exit(1);
   }
 
   try {
@@ -67,14 +67,14 @@ function updateBadges() {
     if (!readme.includes('<!-- BADGES:START -->')) {
       log.warning('Marcadores <!-- BADGES:START --> e <!-- BADGES:END --> não encontrados');
       log.info('Adicione esses marcadores no README.md');
-      return;
+      process.exit(1);
     }
 
     readme = readme.replace(/<!-- BADGES:START -->[\s\S]*?<!-- BADGES:END -->/, badgeSection);
     fs.writeFileSync('README.md', readme, 'utf8');
     log.success('Badges atualizadas no README.md');
     log.error('README.md modificado - você precisa fazer commit manualmente');
-    return;
+    process.exit(1);
   } catch (error) {
     console.error(`Erro: ${error.message}`);
   }
