@@ -79,6 +79,7 @@ function updateBadges() {
     log.success('Badges atualizadas no README.md');
 
     execSync('git add README.md', { stdio: 'ignore' });
+    execSync('git commit -m "chore carlim: update badges"', { stdio: 'ignore' });
     log.success('README.md adicionado ao commit');
 
   } catch (error) {
