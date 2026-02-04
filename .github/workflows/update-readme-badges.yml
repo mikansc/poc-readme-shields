@@ -1,0 +1,127 @@
+name: Update README Badges (Advanced)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'package.json'
+  workflow_dispatch:
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Read package.json and update README
+        run: |
+          # Criar script Node.js para processar package.json
+          cat > update-badges.js << 'EOF'
+          const fs = require('fs');
+          const pkg = require('./package.json');
+          
+          // Função para encode URL
+          const encode = (str) => encodeURIComponent(str || '');
+          
+          // Extrair informações
+          const name = pkg.name || 'project';
+          const version = pkg.version || '0.0.0';
+          const license = pkg.license || 'MIT';
+          const description = pkg.description || '';
+          const nodeVersion = pkg.engines?.node || '>=18';
+          const author = pkg.author || '';
+          
+          // Dependências
+          const dependencies = Object.keys(pkg.dependencies || {}).length;
+          const devDependencies = Object.keys(pkg.devDependencies || {}).length;
+          
+          // Criar badges usando shields.io
+          const badges = [
+            `![Version](https://img.shields.io/badge/version-${encode(version)}-blue.svg)`,
+            `![License](https://img.shields.io/badge/license-${encode(license)}-green.svg)`,
+            `![Node](https://img.shields.io/badge/node-${encode(nodeVersion)}-brightgreen.svg)`,
+          ];
+          
+          // Adicionar badge de dependências se existirem
+          if (dependencies > 0) {
+            badges.push(`![Dependencies](https://img.shields.io/badge/dependencies-${dependencies}-orange.svg)`);
+          }
+          
+          if (devDependencies > 0) {
+            badges.push(`![Dev Dependencies](https://img.shields.io/badge/dev--dependencies-${devDependencies}-yellow.svg)`);
+          }
+          
+          // Badge do npm se tiver repository
+          if (pkg.repository) {
+            const repoUrl = typeof pkg.repository === 'string' 
+              ? pkg.repository 
+              : pkg.repository.url;
+            
+            if (repoUrl && repoUrl.includes('github.com')) {
+              const match = repoUrl.match(/github\.com[/:](.+?)\/(.+?)(\.git)?$/);
+              if (match) {
+                const [, owner, repo] = match;
+                badges.push(`![GitHub stars](https://img.shields.io/github/stars/${owner}/${repo.replace('.git', '')}?style=social)`);
+              }
+            }
+          }
+          
+          // Criar seção de badges
+          const badgeSection = `<!-- BADGES:START -->\n${badges.join('\n')}\n<!-- BADGES:END -->`;
+          
+          // Ler README existente ou criar novo
+          let readme = '';
+          if (fs.existsSync('README.md')) {
+            readme = fs.readFileSync('README.md', 'utf-8');
+          } else {
+            readme = `# ${name}\n\n${description}\n\n`;
+          }
+          
+          // Atualizar badges
+          if (readme.includes('<!-- BADGES:START -->')) {
+            // Substituir badges existentes
+            readme = readme.replace(
+              /<!-- BADGES:START -->[\s\S]*?<!-- BADGES:END -->/,
+              badgeSection
+            );
+          } else {
+            // Inserir badges após a primeira linha (título)
+            const lines = readme.split('\n');
+            lines.splice(1, 0, '', badgeSection, '');
+            readme = lines.join('\n');
+          }
+          
+          // Salvar README atualizado
+          fs.writeFileSync('README.md', readme);
+          console.log('✅ README.md atualizado com sucesso!');
+          EOF
+          
+          # Executar script
+          node update-badges.js
+          
+          # Limpar arquivo temporário
+          rm update-badges.js
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          if git diff --quiet README.md; then
+            echo "✓ Nenhuma alteração detectada no README.md"
+          else
+            git add README.md
+            git commit -m "docs: update README badges [skip ci]"
+            git push
+            echo "✓ README.md commitado e enviado com sucesso!"
+          fi
