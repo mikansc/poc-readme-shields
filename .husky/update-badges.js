@@ -103,6 +103,7 @@ function updateBadges() {
     fs.writeFileSync('README.md', readme, 'utf8');
     log.success('Badges atualizadas no README.md');
     log.info('README.md modificado - você pode fazer commit manualmente');
+    process.exit(1);
   } catch (error) {
     console.error(`Erro: ${error.message}`);
   }
