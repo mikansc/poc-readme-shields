@@ -17,37 +17,8 @@ const log = {
 };
 
 function isPackageJsonModified() {
-  try {
-    // Get the remote branch name (defaults to origin/main or origin/master)
-    let remoteBranch = 'origin/main';
-    try {
-      const currentBranch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8' }).trim();
-      const remoteTracking = execSync(`git rev-parse --abbrev-ref --symbolic-full-name ${currentBranch}@{upstream}`, { encoding: 'utf8' }).trim();
-      remoteBranch = remoteTracking;
-    } catch (error) {
-      // If no remote tracking branch, try to detect default branch
-      try {
-        const defaultBranch = execSync('git symbolic-ref refs/remotes/origin/HEAD', { encoding: 'utf8' }).trim().replace('refs/remotes/', '');
-        remoteBranch = defaultBranch;
-      } catch (e) {
-        // If no remote exists, check if package.json was modified in the last commit
-        const lastCommitFiles = execSync('git diff-tree --no-commit-id --name-only -r HEAD', { encoding: 'utf8' });
-        return lastCommitFiles.includes('package.json');
-      }
-    }
-
-    // Check if package.json was modified in commits being pushed
-    const changedFiles = execSync(`git diff ${remoteBranch}...HEAD --name-only`, { encoding: 'utf8' });
-    return changedFiles.includes('package.json');
-  } catch (error) {
-    // Fallback: check if package.json was modified in the last commit
-    try {
       const lastCommitFiles = execSync('git diff-tree --no-commit-id --name-only -r HEAD', { encoding: 'utf8' });
       return lastCommitFiles.includes('package.json');
-    } catch (e) {
-      return false;
-    }
-  }
 }
 
 function updateBadges() {
@@ -102,8 +73,8 @@ function updateBadges() {
     readme = readme.replace(/<!-- BADGES:START -->[\s\S]*?<!-- BADGES:END -->/, badgeSection);
     fs.writeFileSync('README.md', readme, 'utf8');
     log.success('Badges atualizadas no README.md');
-    log.info('README.md modificado - você pode fazer commit manualmente');
-    process.exit(1);
+    log.error('README.md modificado - você precisa fazer commit manualmente');
+    return;
   } catch (error) {
     console.error(`Erro: ${error.message}`);
   }
