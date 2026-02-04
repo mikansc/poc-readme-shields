@@ -1,10 +1,10 @@
 {
   "name": "poc-readme-shields",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./src/index.js",
+    "start": "node ./src/index.js"
   },
   "repository": {
     "type": "git",

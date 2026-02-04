@@ -1,9 +1,8 @@
 <!-- BADGES:START -->
-![Version](https://img.shields.io/badge/version-1.5.25-blue.svg)
+![Version](https://img.shields.io/badge/version-2.0.5-blue.svg)
 ![License](https://img.shields.io/badge/license-ISC-green.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)
 ![Dependencies](https://img.shields.io/badge/dependencies-1-orange.svg)
-![Dev Dependencies](https://img.shields.io/badge/dev--dependencies-1-yellow.svg)
 <!-- BADGES:END -->
 
 # Meu Projeto Node
