@@ -55,14 +55,14 @@ function updateBadges() {
 
   if (!isPackageJsonModified()) {
     log.success('package.json não foi modificado, pulando atualização');
-    return false;
+    return;
   }
 
   log.info('package.json modificado, atualizando badges...');
 
   if (!fs.existsSync('README.md')) {
     log.warning('README.md não encontrado!');
-    return false;
+    return;
   }
 
   try {
@@ -96,21 +96,15 @@ function updateBadges() {
     if (!readme.includes('<!-- BADGES:START -->')) {
       log.warning('Marcadores <!-- BADGES:START --> e <!-- BADGES:END --> não encontrados');
       log.info('Adicione esses marcadores no README.md');
-      return false;
+      return;
     }
 
     readme = readme.replace(/<!-- BADGES:START -->[\s\S]*?<!-- BADGES:END -->/, badgeSection);
     fs.writeFileSync('README.md', readme, 'utf8');
     log.success('Badges atualizadas no README.md');
-
-    execSync('git add README.md', { stdio: 'ignore' });
-    execSync('git commit -m "chore carlim: update badges"', { stdio: 'ignore' });
-    log.success('README.md adicionado ao commit');
-
-    return true;
+    log.info('README.md modificado - você pode fazer commit manualmente');
   } catch (error) {
     console.error(`Erro: ${error.message}`);
-    return false;
   }
 }
 
