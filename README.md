@@ -1,10 +1,9 @@
 <!-- BADGES:START -->
-![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.3-blue.svg)
 ![License](https://img.shields.io/badge/license-ISC-green.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)
 ![Dependencies](https://img.shields.io/badge/dependencies-1-orange.svg)
 ![Dev Dependencies](https://img.shields.io/badge/dev--dependencies-1-yellow.svg)
-![GitHub stars](https://img.shields.io/github/stars/mikansc/poc-readme-shields?style=social)
 <!-- BADGES:END -->
 
 # Meu Projeto Node
