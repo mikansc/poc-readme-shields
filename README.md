@@ -1,9 +1,10 @@
 <!-- BADGES:START -->
-![Version](https://img.shields.io/badge/version-3.0.2-blue.svg)
-![License](https://img.shields.io/badge/license-ISC-green.svg)
-![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)
-![Dependencies](https://img.shields.io/badge/dependencies-2-orange.svg)
-![GitHub stars](https://img.shields.io/github/stars/mikansc/poc-readme-shields?style=social)
+![Version](https://img.shields.io/badge/version-3.0.3-blue.svg?style=for-the-badge)
+![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg?style=for-the-badge)
+![Front Hub](https://img.shields.io/badge/front--hub-%5E7.2.0-blue.svg?style=for-the-badge)
+![Front Hub CLI](https://img.shields.io/badge/front--hub--cli-%5E7.2.0-blue.svg?style=for-the-badge)
+![Front Hub Commons](https://img.shields.io/badge/front--hub--commons-%5E7.2.0-blue.svg?style=for-the-badge)
+![Tangram](https://img.shields.io/badge/tangram-8.20.0-blue?style=for-the-badge)
 <!-- BADGES:END -->
 
 # README com Atualização Automática (Badges)
