@@ -39,9 +39,7 @@ jobs:
           const encode = (str) => encodeURIComponent(str || '');
 
           // Extrair informações
-          const name = pkg.name || 'project';
           const version = pkg.version || '0.0.0';
-
           const nodeVersion = pkg.engines?.node || '>=18';
 
           // Versões de dependências
@@ -57,20 +55,19 @@ jobs:
           // https://img.shields.io/badge/front--hub-7.2-blue?style=for-the-badge
           // Criar badges usando shields.io
           const badges = [
-            `![Version](https://img.shields.io/badge/version-${encode(version)}-blue.svg)`,
-            `![License](https://img.shields.io/badge/license-${encode(license)}-green.svg)`,
-            `![Node](https://img.shields.io/badge/node-${encode(nodeVersion)}-brightgreen.svg)`,
+            `![Version](https://img.shields.io/badge/version-${encode(version)}-blue.svg?style=for-the-badge)`,
+            `![Node](https://img.shields.io/badge/node-${encode(nodeVersion)}-brightgreen.svg?style=for-the-badge)`,
           ];
 
           // adicionar badge do fronthub se existir
           if (frontHubVersion) {
-            badges.push(`![Front Hub](https://img.shields.io/badge/front--hub-${encode(frontHubVersion)}-blue?style=for-the-badge)`);
+            badges.push(`![Front Hub](https://img.shields.io/badge/front--hub-${encode(frontHubVersion)}-blue.svg?style=for-the-badge)`);
           }
           if (frontHubCliVersion) {
-            badges.push(`![Front Hub CLI](https://img.shields.io/badge/front--hub--cli-${encode(frontHubCliVersion)}-blue?style=for-the-badge)`);
+            badges.push(`![Front Hub CLI](https://img.shields.io/badge/front--hub--cli-${encode(frontHubCliVersion)}-blue.svg?style=for-the-badge)`);
           }
           if (frontHubCommonsVersion) {
-            badges.push(`![Front Hub Commons](https://img.shields.io/badge/front--hub--commons-${encode(frontHubCommonsVersion)}-blue?style=for-the-badge)`);
+            badges.push(`![Front Hub Commons](https://img.shields.io/badge/front--hub--commons-${encode(frontHubCommonsVersion)}-blue.svg?style=for-the-badge)`);
           }
 
           // adicionar badge do tangram se existir
