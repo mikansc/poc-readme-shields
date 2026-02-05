@@ -34,64 +34,63 @@ jobs:
           cat > update-badges.js << 'EOF'
           const fs = require('fs');
           const pkg = require('./package.json');
-          
+
           // Função para encode URL
           const encode = (str) => encodeURIComponent(str || '');
-          
+
           // Extrair informações
           const name = pkg.name || 'project';
           const version = pkg.version || '0.0.0';
-          const license = pkg.license || 'MIT';
-          const description = pkg.description || '';
+
           const nodeVersion = pkg.engines?.node || '>=18';
-          const author = pkg.author || '';
-          
-          // Dependências
-          const dependencies = Object.keys(pkg.dependencies || {}).length;
-          const devDependencies = Object.keys(pkg.devDependencies || {}).length;
-          
+
+          // Versões de dependências
+          // -- front-hub
+          const frontHubVersion = pkg.dependencies?.['@resultadosdigitais/front-hub'] || '0.0.0';
+          const frontHubCliVersion = pkg.devDependencies?.['@resultadosdigitais/front-hub-cli'] || '0.0.0';
+          const frontHubCommonsVersion = pkg.devDependencies?.['@resultadosdigitais/front-hub-commons'] || '0.0.0';
+
+          // -- tangram
+          const tangramVersion = pkg.dependencies?.['@resultadosdigitais/tangram-components'] || '0.0.0';
+
+
+          // https://img.shields.io/badge/front--hub-7.2-blue?style=for-the-badge
           // Criar badges usando shields.io
           const badges = [
             `![Version](https://img.shields.io/badge/version-${encode(version)}-blue.svg)`,
             `![License](https://img.shields.io/badge/license-${encode(license)}-green.svg)`,
             `![Node](https://img.shields.io/badge/node-${encode(nodeVersion)}-brightgreen.svg)`,
           ];
-          
-          // Adicionar badge de dependências se existirem
-          if (dependencies > 0) {
-            badges.push(`![Dependencies](https://img.shields.io/badge/dependencies-${dependencies}-orange.svg)`);
+
+          // adicionar badge do fronthub se existir
+          if (frontHubVersion) {
+            badges.push(`![Front Hub](https://img.shields.io/badge/front--hub-${encode(frontHubVersion)}-blue?style=for-the-badge)`);
           }
-          
-          if (devDependencies > 0) {
-            badges.push(`![Dev Dependencies](https://img.shields.io/badge/dev--dependencies-${devDependencies}-yellow.svg)`);
+          if (frontHubCliVersion) {
+            badges.push(`![Front Hub CLI](https://img.shields.io/badge/front--hub--cli-${encode(frontHubCliVersion)}-blue?style=for-the-badge)`);
           }
-          
-          // Badge do npm se tiver repository
-          if (pkg.repository) {
-            const repoUrl = typeof pkg.repository === 'string' 
-              ? pkg.repository 
-              : pkg.repository.url;
-            
-            if (repoUrl && repoUrl.includes('github.com')) {
-              const match = repoUrl.match(/github\.com[/:](.+?)\/(.+?)(\.git)?$/);
-              if (match) {
-                const [, owner, repo] = match;
-                badges.push(`![GitHub stars](https://img.shields.io/github/stars/${owner}/${repo.replace('.git', '')}?style=social)`);
-              }
-            }
+          if (frontHubCommonsVersion) {
+            badges.push(`![Front Hub Commons](https://img.shields.io/badge/front--hub--commons-${encode(frontHubCommonsVersion)}-blue?style=for-the-badge)`);
           }
-          
+
+          // adicionar badge do tangram se existir
+          if (tangramVersion) {
+            badges.push(`![Tangram](https://img.shields.io/badge/tangram-${encode(tangramVersion)}-blue?style=for-the-badge)`);
+          }
+
+
           // Criar seção de badges
           const badgeSection = `<!-- BADGES:START -->\n${badges.join('\n')}\n<!-- BADGES:END -->`;
-          
-          // Ler README existente ou criar novo
-          let readme = '';
-          if (fs.existsSync('README.md')) {
+
+          // Ler README existente ou logar erro se não existir
+          let readme = "";
+          try {
             readme = fs.readFileSync('README.md', 'utf-8');
-          } else {
-            readme = `# ${name}\n\n${description}\n\n`;
+          } catch (error) {
+            console.error('❌ README.md não encontrado!');
+            return;
           }
-          
+
           // Atualizar badges
           if (readme.includes('<!-- BADGES:START -->')) {
             // Substituir badges existentes
@@ -105,7 +104,7 @@ jobs:
             lines.splice(1, 0, '', badgeSection, '');
             readme = lines.join('\n');
           }
-          
+
           // Salvar README atualizado
           fs.writeFileSync('README.md', readme);
           console.log('✅ README.md atualizado com sucesso!');
