@@ -9,12 +9,9 @@
 
 # README com Atualização Automática (Badges)
 
-Projeto de exemplo para configurar **atualizações automáticas do README** por meio de:
+Projeto de exemplo para configurar **atualizações automáticas do README** por meio de **GitHub Actions**: os badges são atualizados no repositório quando o `package.json` é enviado para a branch `main` (ou quando o workflow é acionado manualmente).
 
-- **Pre-commit hooks** — os badges são atualizados localmente antes de cada commit quando o `package.json` é alterado.
-- **GitHub Actions** — os badges são atualizados no repositório quando o `package.json` é enviado para a branch `main`.
-
-O README mantém uma seção de badges sincronizada com o `package.json` (versão, licença, versão do Node, quantidade de dependências). O bloco de badges é delimitado por `<!-- BADGES:START -->` e `<!-- BADGES:END -->`; apenas esse bloco é substituído.
+O README mantém uma seção de badges sincronizada com o `package.json` (versão, versão do Node, dependências como Front Hub e Tangram quando presentes). O bloco de badges é delimitado por `<!-- BADGES:START -->` e `<!-- BADGES:END -->`; apenas esse bloco é substituído.
 
 O código em `src/` é apenas um app Node mínimo e não é necessário para a configuração da atualização automática.
 
@@ -28,56 +25,16 @@ O código em `src/` é apenas um app Node mínimo e não é necessário para a c
 
 ---
 
-## Opção 1: Pre-commit hook
+## GitHub Actions
 
-Execute o script de configuração a partir da raiz do projeto. Ele pedirá para você escolher:
-
-1. **Husky** — recomendado para times (o hook é versionado e compartilhado).
-2. **Git hooks nativos** — mais simples, sem dependências extras; cada desenvolvedor deve executar o script.
-
-**Comandos:**
-
-```bash
-# From the project root
-bash bin/setup-precommit.sh
-```
-
-Quando solicitado, escolha `1` para Husky ou `2` para hooks nativos. O script instala o hook e cria a lógica de atualização. Você não precisa copiar nenhum do código gerado manualmente.
-
-**Teste rápido após a configuração:**
-
-```bash
-npm version patch
-git add package.json
-git commit -m "chore: bump version"
-```
-
-Se o `package.json` estiver no commit, o hook atualizará os badges no README e adicionará o `README.md` ao mesmo commit.
-
----
-
-## Opção 2: GitHub Actions
-
-Um arquivo de workflow é fornecido como backup para que não seja executado até você habilitá-lo.
-
-**Passos:**
-
-1. Acesse `.github/workflows/`.
-2. Renomeie `update-readme-badges.yml.bkp` para `update-readme-badges.yml` (remova a extensão `.bkp`).
-
-Após renomear, o workflow irá:
+O workflow está em `.github/workflows/update-readme-badges.yml`. Ele irá:
 
 - Executar em pushes para `main` que alterem o `package.json`, ou quando acionado manualmente (workflow_dispatch).
 - Atualizar os badges do README e fazer commit da alteração de volta ao repositório (com uma mensagem como `docs: update README badges [skip ci]`).
 
-### Autor do commit (usuário e e-mail)
+### Autor do commit
 
-O commit automatizado é **atribuído ao usuário que acionou o workflow**:
-
-- **Em push:** o autor do commit é o usuário que fez push para `main` (nome de usuário no GitHub e `username@users.noreply.github.com`).
-- **Em execução manual (workflow_dispatch):** o autor do commit é o usuário que clicou em "Run workflow".
-
-Não é necessário definir `user.name` ou `user.email` manualmente no workflow; ele usa `github.actor` e o e-mail no-reply do GitHub para que o commit de atualização dos badges apareça para a pessoa correta.
+O commit automatizado é feito pelo **readme-bot** (`readme-bot@users.noreply.github.com`), configurado no próprio workflow, com mensagem `docs: update README badges [skip ci]` para evitar novo ciclo de CI.
 
 ### Repositórios privados
 
@@ -95,9 +52,9 @@ O workflow está configurado para usar `GH_PAT` quando presente e fazer fallback
 
 ## Resumo
 
-| Método           | Quando executa                              | Melhor para                    |
-|------------------|---------------------------------------------|--------------------------------|
-| Pre-commit hook  | Todo commit que inclui package.json         | Atualizações locais e imediatas |
-| GitHub Actions   | Push para main que altera package.json      | Atualizações centralizadas via CI |
+| Quando executa | Comportamento |
+|----------------|---------------|
+| Push para `main` que altera `package.json` | O workflow atualiza os badges no README e faz commit da alteração. |
+| Execução manual (workflow_dispatch) | O mesmo: atualização dos badges e commit. |
 
-Você pode usar um ou ambos. O formato dos badges e os placeholders (`<!-- BADGES:START -->` / `<!-- BADGES:END -->`) são os mesmos para qualquer método.
+O formato dos badges e os placeholders (`<!-- BADGES:START -->` / `<!-- BADGES:END -->`) são definidos no workflow.
