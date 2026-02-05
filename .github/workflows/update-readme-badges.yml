@@ -120,8 +120,8 @@ jobs:
       - name: Commit and push changes
         run: |
           # Use the author of the push (or the user who dispatched the workflow) for the commit
-          git config --local user.email "${{ github.actor }}@users.noreply.github.com"
-          git config --local user.name "${{ github.actor }}"
+          git config --local user.email "readme-bot@users.noreply.github.com"
+          git config --local user.name "readme-bot"
           
           if git diff --quiet README.md; then
             echo "✓ Nenhuma alteração detectada no README.md"
